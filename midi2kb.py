@@ -1,6 +1,6 @@
 # Dependencies
 import mido
-from pynput.keyboard import Key, Controller
+from pynput.keyboard import Controller
 
 # Use A Major Scale
 # Maybe switch to something more interesting...
@@ -33,9 +33,13 @@ notes = {
 keyboard = Controller()
 
 # Main note processing loop...
-with mido.open_input() as inport:
+with mido.open_input() as inport: # type: ignore
     for msg in inport:
-		# Convert MIDI note to key using dict.zxxzc
+        # Skip if msg not has note
+        if not hasattr(msg, "note"):
+            continue
+        
+		# Convert MIDI note to key using dict
         key = notes.get(msg.note, None)
         print(f"{msg.note}: {key}")
 
